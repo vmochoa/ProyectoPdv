@@ -9,10 +9,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DBREACT_VENTAContext>();
 
 //Si necesitas preservar las relaciones y evitar el ciclo infinito de serialización, puedes usar la siguiente configuración:
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddControllers().AddJsonOptions(option =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.WriteIndented = true;
+    option.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 var app = builder.Build();
 

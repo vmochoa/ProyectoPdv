@@ -48,6 +48,7 @@ const Usuario = () => {
         if (response.ok) {
             let data = await response.json()
             setRoles(data)
+            
         }
     }
 
