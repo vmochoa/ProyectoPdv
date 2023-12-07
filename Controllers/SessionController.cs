@@ -20,19 +20,29 @@ namespace ReactVentas.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] Dtosesion request)
         {
-            Usuario usuario = new Usuario();
+           
+            if (string.IsNullOrEmpty(request.correo) || string.IsNullOrEmpty(request.clave))
+            {
+                return BadRequest("Correo y clave son requeridos.");
+            }
+
             try
             {
-                usuario = _context.Usuarios.Include(u => u.IdRolNavigation).Where(u => u.Correo == request.correo && u.Clave == request.clave).FirstOrDefault();
+                Usuario? usuario = _context.Usuarios.Include(u => u.IdRolNavigation)
+                                                   .FirstOrDefault(u => u.Correo == request.correo);
 
-                if(usuario == null)
-                    usuario = new Usuario();
+             
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado.");
+                }
 
-                return StatusCode(StatusCodes.Status200OK, usuario);
+                return Ok(usuario);
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, usuario);
+                Console.WriteLine(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocurrió un error en el servidor.");
             }
         }
     }
