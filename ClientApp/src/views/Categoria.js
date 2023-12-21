@@ -144,37 +144,36 @@ const Categoria = () => {
     }
 
 
-    const eliminarCategoria = async(id) => {
-
+    const eliminarCategoria = async (id) => {
         Swal.fire({
-            title: 'Esta seguro?',
-            text: "Desesa eliminar esta categoria",
+            title: '¿Está seguro?',
+            text: '¿Desea eliminar esta categoría?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, continuar',
+            confirmButtonText: 'Sí, continuar',
             cancelButtonText: 'No, volver'
         }).then((result) => {
             if (result.isConfirmed) {
-
-                const response = fetch("api/categoria/Eliminar/" + id, { method: "DELETE" })
-                    .then( response => {
+                fetch('api/categoria/Eliminar/' + id, { method: 'DELETE' })
+                    .then((response) => {
                         if (response.ok) {
-
                             obtenerCategorias();
-
-                            Swal.fire(
-                                'Eliminado!',
-                                'La categoria fue eliminada.',
-                                'success'
-                            )
+                            Swal.fire('¡Eliminado!', 'La categoría fue eliminada.', 'success');
+                        } else if (response.status === 409) {
+                            throw new Error('No se puede eliminar la categoría ya que está siendo utilizada por uno o más productos');
+                        } else {
+                            throw new Error('Error al eliminar la categoría.');
                         }
                     })
-               
+                    .catch((error) => {
+                        console.error('Error al eliminar la categoría:', error);
+                        Swal.fire('Error', error.message, 'error');
+                    });
             }
-        })
-    }
+        });
+    };
     
     return (
         <>
