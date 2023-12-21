@@ -63,18 +63,38 @@ namespace ReactVentas.Controllers
 
         [HttpDelete]
         [Route("Eliminar/{id:int}")]
-        public async Task<IActionResult> Eliminar(int id) {
+        public async Task<IActionResult> Eliminar(int id)
+        {
             try
             {
                 Categorium categoria = _context.Categoria.Find(id);
+                if (categoria == null)
+                {
+                    return NotFound("Categoría no encontrada");
+                }
+
                 _context.Categoria.Remove(categoria);
                 await _context.SaveChangesAsync();
-                return StatusCode(StatusCodes.Status200OK, "ok");
+                return StatusCode(StatusCodes.Status200OK, "Categoría eliminada exitosamente");
             }
-            catch (Exception ex) {
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                if (ex.InnerException is Microsoft.Data.SqlClient.SqlException sqlEx && sqlEx.Number == 547)
+                {
+                    // Código de error 547 es para conflictos de clave foránea
+                    return StatusCode(StatusCodes.Status409Conflict, "No se puede eliminar la categoría ya que está siendo utilizada por uno o más productos");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Ocurrió un error al eliminar la categoría");
+                }
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
 
     }
 }
