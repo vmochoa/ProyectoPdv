@@ -31,12 +31,12 @@ namespace ReactVentas.Controllers
             {
                 config.TotalVentas = _context.Venta.Where(v => v.FechaRegistro >= fecha).Count().ToString();
                 config.TotalIngresos = _context.Venta.Where(v => v.FechaRegistro >= fecha).Sum(v => v.Total).ToString();
-                config.TotalProductos = _context.Productos.Count().ToString();
+                config.TotalProductos = _context.ProductosFinales.Count().ToString();
                 config.TotalCategorias = _context.Categoria.Count().ToString();
 
 
-                config.ProductosVendidos = (from p in _context.Productos
-                           join d in _context.DetalleVenta on p.IdProducto equals d.IdProducto
+                config.ProductosVendidos = (from p in _context.ProductosFinales
+                                            join d in _context.DetalleVenta on p.IdProducto equals d.IdProducto
                            group p by p.Descripcion into g
                            orderby g.Count() ascending
                            select new DtoProductoVendidos { Producto = g.Key, Total = g.Count().ToString()}).Take(4).ToList();

@@ -18,8 +18,10 @@ namespace ProyectoPDV.Models
 
         public virtual DbSet<Categorium> Categoria { get; set; } = null!;
         public virtual DbSet<DetalleVentum> DetalleVenta { get; set; } = null!;
+        public virtual DbSet<Insumo> Insumos { get; set; } = null!;
+        public virtual DbSet<InsumosXProductoFinal> InsumosXProductoFinals { get; set; } = null!;
         public virtual DbSet<NumeroDocumento> NumeroDocumentos { get; set; } = null!;
-        public virtual DbSet<Producto> Productos { get; set; } = null!;
+        public virtual DbSet<ProductosFinale> ProductosFinales { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
         public virtual DbSet<Ventum> Venta { get; set; } = null!;
@@ -28,7 +30,8 @@ namespace ProyectoPDV.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-3UPLQ80\\SQLEXPRESS;Database=DBREACT_VENTA;User Id=root;Password=1234;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=DESKTOP-3UPLQ80\\SQLEXPRESS;Database=DBREACT_VENTA;Trusted_Connection=True;");
             }
         }
 
@@ -50,7 +53,8 @@ namespace ProyectoPDV.Models
 
                 entity.Property(e => e.FechaRegistro)
                     .HasColumnType("datetime")
-                    .HasColumnName("fechaRegistro");
+                    .HasColumnName("fechaRegistro")
+                    .HasDefaultValueSql("(getdate())");
             });
 
             modelBuilder.Entity<DetalleVentum>(entity =>
@@ -85,6 +89,62 @@ namespace ProyectoPDV.Models
                     .HasConstraintName("FK__DetalleVe__idVen__59FA5E80");
             });
 
+            modelBuilder.Entity<Insumo>(entity =>
+            {
+                entity.HasKey(e => e.IdInsumo)
+                    .HasName("PK_Accesorios");
+
+                entity.Property(e => e.IdInsumo)
+                    .ValueGeneratedNever()
+                    .HasColumnName("idInsumo");
+
+                entity.Property(e => e.CantidadEnPaquete).HasColumnName("cantidadEnPaquete");
+
+                entity.Property(e => e.Costo)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("costo");
+
+                entity.Property(e => e.CostoUnitario)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("costoUnitario");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(100)
+                    .HasColumnName("nombre")
+                    .IsFixedLength();
+            });
+
+            modelBuilder.Entity<InsumosXProductoFinal>(entity =>
+            {
+                entity.ToTable("Insumos_x_ProductoFinal");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CantidadInsumos)
+                    .HasColumnType("decimal(10, 1)")
+                    .HasColumnName("cantidadInsumos");
+
+                entity.Property(e => e.CostoTotal)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("costoTotal");
+
+                entity.Property(e => e.IdInsumo).HasColumnName("idInsumo");
+
+                entity.Property(e => e.IdProductoFinal).HasColumnName("idProductoFinal");
+
+                entity.HasOne(d => d.IdInsumoNavigation)
+                    .WithMany(p => p.InsumosXProductoFinals)
+                    .HasForeignKey(d => d.IdInsumo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_pxpb_productoBase");
+
+                entity.HasOne(d => d.IdProductoFinalNavigation)
+                    .WithMany(p => p.InsumosXProductoFinals)
+                    .HasForeignKey(d => d.IdProductoFinal)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_pxpb_producto");
+            });
+
             modelBuilder.Entity<NumeroDocumento>(entity =>
             {
                 entity.ToTable("NumeroDocumento");
@@ -95,15 +155,14 @@ namespace ProyectoPDV.Models
 
                 entity.Property(e => e.FechaRegistro)
                     .HasColumnType("datetime")
-                    .HasColumnName("fechaRegistro");
+                    .HasColumnName("fechaRegistro")
+                    .HasDefaultValueSql("(getdate())");
             });
 
-            modelBuilder.Entity<Producto>(entity =>
+            modelBuilder.Entity<ProductosFinale>(entity =>
             {
                 entity.HasKey(e => e.IdProducto)
                     .HasName("PK__Producto__07F4A132837F2B7D");
-
-                entity.ToTable("Producto");
 
                 entity.Property(e => e.IdProducto).HasColumnName("idProducto");
 
@@ -112,6 +171,10 @@ namespace ProyectoPDV.Models
                     .IsUnicode(false)
                     .HasColumnName("codigo");
 
+                entity.Property(e => e.Costo)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("costo");
+
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(100)
                     .IsUnicode(false)
@@ -119,25 +182,29 @@ namespace ProyectoPDV.Models
 
                 entity.Property(e => e.EsActivo).HasColumnName("esActivo");
 
+                entity.Property(e => e.Factor)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("factor");
+
                 entity.Property(e => e.FechaRegistro)
                     .HasColumnType("datetime")
-                    .HasColumnName("fechaRegistro");
+                    .HasColumnName("fechaRegistro")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.GananciaBruta).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.IdCategoria).HasColumnName("idCategoria");
-
-                entity.Property(e => e.Marca)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("marca");
 
                 entity.Property(e => e.Precio)
                     .HasColumnType("decimal(10, 2)")
                     .HasColumnName("precio");
 
+                entity.Property(e => e.PrecioVenta).HasColumnType("decimal(10, 2)");
+
                 entity.Property(e => e.Stock).HasColumnName("stock");
 
                 entity.HasOne(d => d.IdCategoriaNavigation)
-                    .WithMany(p => p.Productos)
+                    .WithMany(p => p.ProductosFinales)
                     .HasForeignKey(d => d.IdCategoria)
                     .HasConstraintName("FK__Producto__idCate__52593CB8");
             });
@@ -160,7 +227,8 @@ namespace ProyectoPDV.Models
 
                 entity.Property(e => e.FechaRegistro)
                     .HasColumnType("datetime")
-                    .HasColumnName("fechaRegistro");
+                    .HasColumnName("fechaRegistro")
+                    .HasDefaultValueSql("(getdate())");
             });
 
             modelBuilder.Entity<Usuario>(entity =>
@@ -216,7 +284,8 @@ namespace ProyectoPDV.Models
 
                 entity.Property(e => e.FechaRegistro)
                     .HasColumnType("datetime")
-                    .HasColumnName("fechaRegistro");
+                    .HasColumnName("fechaRegistro")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");
 

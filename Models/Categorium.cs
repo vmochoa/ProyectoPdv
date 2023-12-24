@@ -7,14 +7,14 @@ namespace ProyectoPDV.Models
     {
         public Categorium()
         {
-            Productos = new HashSet<Producto>();
+            ProductosFinales = new HashSet<ProductosFinale>();
         }
 
         public int IdCategoria { get; set; }
-        public string? Descripcion { get; set; }
-        public bool? EsActivo { get; set; }
+        public string Descripcion { get; set; } = null!;
+        public bool EsActivo { get; set; }
         public DateTime? FechaRegistro { get; set; }
 
-        public virtual ICollection<Producto> Productos { get; set; }
+        public virtual ICollection<ProductosFinale> ProductosFinales { get; set; }
     }
 }

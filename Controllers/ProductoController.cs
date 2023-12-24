@@ -19,10 +19,10 @@ namespace ReactVentas.Controllers
         [Route("Lista")]
         public async Task<IActionResult> Lista()
         {
-            List<Producto> lista = new List<Producto>();
+            List<ProductosFinale> lista = new List<ProductosFinale>();
             try
             {
-                lista = await _context.Productos.Include(c => c.IdCategoriaNavigation).OrderByDescending(c => c.IdProducto).ToListAsync();
+                lista = await _context.ProductosFinales.Include(c => c.IdCategoriaNavigation).OrderByDescending(c => c.IdProducto).ToListAsync();
 
                 return StatusCode(StatusCodes.Status200OK, lista);
             }
@@ -34,11 +34,11 @@ namespace ReactVentas.Controllers
 
         [HttpPost]
         [Route("Guardar")]
-        public async Task<IActionResult> Guardar([FromBody] Producto request)
+        public async Task<IActionResult> Guardar([FromBody] ProductosFinale request)
         {
             try
             {
-                await _context.Productos.AddAsync(request);
+                await _context.ProductosFinales.AddAsync(request);
                 await _context.SaveChangesAsync();
 
                 return StatusCode(StatusCodes.Status200OK, "ok");
@@ -52,11 +52,11 @@ namespace ReactVentas.Controllers
 
         [HttpPut]
         [Route("Editar")]
-        public async Task<IActionResult> Editar([FromBody] Producto request)
+        public async Task<IActionResult> Editar([FromBody] ProductosFinale request)
         {
             try
             {
-                _context.Productos.Update(request);
+                _context.ProductosFinales.Update(request);
                 await _context.SaveChangesAsync();
 
                 return StatusCode(StatusCodes.Status200OK, "ok");
@@ -73,8 +73,8 @@ namespace ReactVentas.Controllers
         {
             try
             {
-                Producto usuario = _context.Productos.Find(id);
-                _context.Productos.Remove(usuario);
+                ProductosFinale usuario = _context.ProductosFinales.Find(id);
+                _context.ProductosFinales.Remove(usuario);
                 await _context.SaveChangesAsync();
                 return StatusCode(StatusCodes.Status200OK, "ok");
             }

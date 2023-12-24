@@ -12,7 +12,7 @@ namespace ProyectoPDV.Models
         public decimal? Precio { get; set; }
         public decimal? Total { get; set; }
 
-        public virtual Producto? IdProductoNavigation { get; set; }
+        public virtual ProductosFinale? IdProductoNavigation { get; set; }
         public virtual Ventum? IdVentaNavigation { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace ProyectoPDV.Controllers
         [Route("GetProductos")]
         public IActionResult GetProductos()
         {
-            List<Producto> productos = _context.Productos.ToList();
+            List<ProductosFinale> productos = _context.ProductosFinales.ToList();
             return StatusCode(StatusCodes.Status200OK, productos);
         }
 

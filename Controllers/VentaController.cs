@@ -28,13 +28,12 @@ namespace ReactVentas.Controllers
             List<DtoProducto> lista = new List<DtoProducto>();
             try
             {
-                lista = await _context.Productos
-                .Where(p => string.Concat(p.Codigo.ToLower(), p.Marca.ToLower(), p.Descripcion.ToLower()).Contains(busqueda.ToLower()))
+                lista = await _context.ProductosFinales
+                .Where(p => string.Concat(p.Codigo.ToLower(), p.Descripcion.ToLower()).Contains(busqueda.ToLower()))
                 .Select(p => new DtoProducto()
                 {
                     IdProducto = p.IdProducto,
                     Codigo = p.Codigo,
-                    Marca = p.Marca,
                     Descripcion = p.Descripcion,
                     Precio = p.Precio
                 }).ToListAsync();
@@ -188,7 +187,7 @@ namespace ReactVentas.Controllers
             {
                 lista_venta = (from v in _context.Venta
                                join d in _context.DetalleVenta on v.IdVenta equals d.IdVenta
-                               join p in _context.Productos on d.IdProducto equals p.IdProducto
+                               join p in _context.ProductosFinales on d.IdProducto equals p.IdProducto
                                where v.FechaRegistro.Value.Date >= _fechainicio.Date && v.FechaRegistro.Value.Date <= _fechafin.Date
                                select new DtoReporteVenta()
                                  {
