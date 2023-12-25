@@ -28,13 +28,15 @@ const NavBar = () => {
         
         <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <Link className="sidebar-brand d-flex align-items-center justify-content-center .mb-5" to="/">
+            <Link className="sidebar-brand d-flex align-items-center justify-content-center mb-3" to="/">
                 {/* <div className="sidebar-brand-icon">
                     <i className="fas fa-desktop"></i>
                 </div>
                 
                 <div className="sidebar-brand-text mx-3"></div> */}
-                <img src={LogoFloreria} className='w-25'></img>
+                <div className=' p-5'>
+                <img src={LogoFloreria} className=' img-fluid'></img>
+                </div>
             </Link>
 
 

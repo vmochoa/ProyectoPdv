@@ -76,11 +76,12 @@ const Producto = () => {
             selector: row => row.codigo,
             sortable: true,
         },
-        {
-            name: 'Marca',
-            selector: row => row.marca,
-            sortable: true,
-        },
+        // {
+        //     name: 'Marca',
+        //     selector: row => row.marca,
+        //     sortable: true,
+        // },
+      
         {
             name: 'Descripcion',
             selector: row => row.descripcion,
@@ -91,6 +92,27 @@ const Producto = () => {
             selector: row => row.idCategoriaNavigation,
             sortable: true,
             cell: row => (row.idCategoriaNavigation.descripcion)
+        },
+      
+        {
+            name: 'Costo',
+            selector: row => row.costo,
+            sortable: true,
+        },
+        {
+            name: 'Factor',
+            selector: row => row.factor,
+            sortable: true,
+        },
+        {
+            name: 'PrecioVenta',
+            selector: row => row.precioVenta,
+            sortable: true,
+        },
+        {
+            name: 'GananciaBruta',
+            selector: row => row.gananciaBruta,
+            sortable: true,
         },
         {
             name: 'Estado',
